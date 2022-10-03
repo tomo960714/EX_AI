@@ -1,0 +1,42 @@
+import numpy as np
+import wfdb
+import ast
+
+
+
+def load_raw_data(df, sampling_rate, path):
+    if sampling_rate == 100:
+        data = [wfdb.rdsamp(path+f) for f in df.filename_lr]
+    else:
+        data = [wfdb.rdsamp(path+f) for f in df.filename_hr]
+    data = np.array([signal for signal, meta in data])
+    #print(data)
+    return data
+
+
+def calc_BMI(df):
+    """"
+    Calcualting BMI based on the new Oxford formula
+    1.3*weight/height^2
+    """
+    from constants import DATASET_LIMIT
+    tmp_df = df.drop(df[df['weight'].isna() | df['height'].isna()].index)
+    tmp_df['BMI'] = 1.3*tmp_df['weight']/np.power(tmp_df['height']/100,2.5)
+    
+    if isinstance(DATASET_LIMIT,int):
+        #print('a')
+        tmp_df = tmp_df[:DATASET_LIMIT]
+    elif not isinstance(DATASET_LIMIT,str):
+        x = input('Wrong Dataset limit, give a new integer or ALL!\n')
+        if not isinstance(x,str):
+            DATASET_LIMIT = int(x)
+            tmp_df = tmp_df[:DATASET_LIMIT]
+        else:
+            DATASET_LIMIT = 'ALL'
+            #No limit
+    #else:
+        #No limit, Nothing happens
+    
+    tmp_df.reset_index(drop=True, inplace=True)
+
+    return tmp_df
