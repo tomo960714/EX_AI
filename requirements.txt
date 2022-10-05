@@ -1,11 +1,10 @@
 wfdb
 numpy
 pandas
-os
-pytorch
 sklearn
-math
 timm
 transformers
-pickle
-os
+--find-links https://download.pytorch.org/whl/cu116
+torch 
+torchvision
+torchaudio

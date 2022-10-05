@@ -3,7 +3,7 @@
 import pandas as pd
 import os
 
-from utils import load_single_raw_data, calc_BMI
+from utils import load_raw_data, calc_BMI
 from constants import REC_PATH, SAMPLING_RATE,DATASET_LIMIT
 from torchvision import transforms
 
@@ -37,14 +37,13 @@ class PTB_Dataset():
     def __getitem__(self,idx):
 
         label = self.data['BMI'].iloc[idx]
-        #print(label)
         """print(self.rec_dir)
         print(self.data['filename_lr'].iloc[idx])
         """
-        rec = load_single_raw_data(self.data['filename_lr'].iloc[idx],SAMPLING_RATE,REC_PATH)
+        rec = load_raw_data(self.data,SAMPLING_RATE,REC_PATH)
         #print(rec.shape)
         
-        #if idx == 1: print('rec:',rec)
+        if idx == 1: print(rec)
         
         rec_as_tensor = self.transform(rec)
         #print("get",rec_as_tensor.shape)

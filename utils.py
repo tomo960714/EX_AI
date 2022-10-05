@@ -4,11 +4,21 @@ import ast
 
 
 
+def load_single_raw_data(filename, sampling_rate, path):
+    data = wfdb.rdsamp(path+filename) 
+    #print(data)
+    #print('data:',data.shape)
+    data_arr = np.asarray(data[0]).transpose()
+    #print(data_arr.shape)
+    #print('data_arr',data_arr.shape)
+    return data_arr
+
 def load_raw_data(df, sampling_rate, path):
     if sampling_rate == 100:
         data = [wfdb.rdsamp(path+f) for f in df.filename_lr]
     else:
         data = [wfdb.rdsamp(path+f) for f in df.filename_hr]
+    
     data = np.array([signal for signal, meta in data])
     #print(data)
     return data
@@ -38,5 +48,6 @@ def calc_BMI(df):
         #No limit, Nothing happens
     
     tmp_df.reset_index(drop=True, inplace=True)
+    print(tmp_df)
 
     return tmp_df
