@@ -17,7 +17,7 @@ from dataset import PTB_Dataset
 from resnet import resnet18
 
 #constants
-from constants import REC_PATH,CSV_PATH,DATASET_LIMIT,BATCH_SIZE,N_LEADS,N_CLASSES
+from constants import REC_PATH,CSV_PATH,DATASET_LIMIT,BATCH_SIZE,N_LEADS,N_CLASSES,NEPOCHS
 
 
 def train(train_dataloader,model,optimizer,loss_fn):
@@ -62,8 +62,9 @@ def train(train_dataloader,model,optimizer,loss_fn):
 
 
     #%%
-    nEpochs = 15
-    for iEpoch in range(nEpochs):
+    loss_history = []
+    batch_history = []
+    for iEpoch in range(NEPOCHS):
         for batch,(X,y) in enumerate(train_dataloader):
             """print('X',X)
             print('shape',X.shape)
@@ -74,6 +75,12 @@ def train(train_dataloader,model,optimizer,loss_fn):
             
             pred = model(X)
             loss = loss_fn(pred,y)
+            #save loss
+            #print(loss_history.type)
+            
+            loss_history.append(loss.detach().cpu().numpy())
+            batch_history.append(batch)
+            print(batch)
             #print('pred',pred)
             #print('pred shape:',pred.shape)
             """print(cnt)
@@ -84,7 +91,10 @@ def train(train_dataloader,model,optimizer,loss_fn):
             optimizer.step()
             if batch % 100 == 0:
                 loss, current = loss.item(), batch * len(X)
-                print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}] Epoch [{iEpoch:>3d}/{nEpochs:>3d}] ")
-                
+                print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}] Epoch [{iEpoch:>3d}/{NEPOCHS:>3d}] ")
+    print(loss_history)
+    print(batch_history)    
 
 
+
+# %%

@@ -10,5 +10,6 @@ DATASET_LIMIT = 100 # number, limits size of the dataframe
 BATCH_SIZE = 64
 N_LEADS = 12
 N_CLASSES = 1
+NEPOCHS = 2
 
 
