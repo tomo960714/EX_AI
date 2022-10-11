@@ -15,7 +15,7 @@ import timm
 from dataset import PTB_Dataset
 from train import train
 #from predict import predict
-#from validation import validate
+from validation import validate
 
 #constants
 from constants import REC_PATH,CSV_PATH,DATASET_LIMIT,BATCH_SIZE,N_LEADS,N_CLASSES
@@ -40,10 +40,12 @@ train_dataloader = DataLoader(train_dataset,batch_size=BATCH_SIZE)
 test_dataloader = DataLoader(test_dataset,batch_size=BATCH_SIZE)
 model = timm.create_model('resnet18',pretrained=True,in_chans=1)
 #model=model.to(device)
-loss_fn = nn.CrossEntropyLoss()
+loss_fn = nn.()
 learning_rate = 0.01
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 #%%
 train(train_dataloader=train_dataloader,model=model,loss_fn=loss_fn,optimizer=optimizer)
+#validate(va)
 
 
+# %%
