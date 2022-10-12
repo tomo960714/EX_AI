@@ -46,7 +46,9 @@ class PTB_Dataset():
         
         #if idx == 1: print('rec:',rec)
         
-        rec_as_tensor = self.transform(rec)
+        rec_as_tensor = self.transform(rec.astype(float))
+        print(f'label type: {label.dtype}')
+        #label = label.float()
         #print("get",rec_as_tensor.shape)
         ################################
         # might be some transformations here...

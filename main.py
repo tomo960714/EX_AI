@@ -38,14 +38,16 @@ print(test_dataset)"""
 
 train_dataloader = DataLoader(train_dataset,batch_size=BATCH_SIZE)
 test_dataloader = DataLoader(test_dataset,batch_size=BATCH_SIZE)
+print(f'test_dataset {test_dataset}')
 model = timm.create_model('resnet18',pretrained=True,in_chans=1)
 #model=model.to(device)
-loss_fn = nn.()
+loss_fn = nn.MSELoss()
+print('a')
 learning_rate = 0.01
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 #%%
 train(train_dataloader=train_dataloader,model=model,loss_fn=loss_fn,optimizer=optimizer)
-#validate(va)
+validate(validate_dataloader=test_dataloader,model=model)
 
 
 # %%

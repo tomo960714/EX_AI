@@ -70,11 +70,19 @@ def train(train_dataloader,model,optimizer,loss_fn):
             print('shape',X.shape)
             print('y',y)
             print('batch',batch)"""
-            X=X.float()
+            #X=X.float()
+            print(X.shape)
             y=y.long()
-            
+            print(y.shape)
+            print(f'y type:{y.dtype}')
             pred = model(X)
-            loss = loss_fn(pred,y)
+            pred_reshape = torch.movedim(pred,1,0)
+            print(f'pred type:{pred_reshape.dtype}')
+            print(f'Shapes: orig: {pred.shape, pred.dtype},new:{pred_reshape.shape, pred_reshape.dtype}')
+            
+            loss = loss_fn(pred_reshape,y)
+            print(f'loss type: {loss.dtype}')
+            #loss = loss.float()
             #save loss
             #print(loss_history.type)
             

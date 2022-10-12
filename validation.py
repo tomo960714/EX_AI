@@ -1,16 +1,12 @@
-from constants import NEPOCHS
+import torch
 import numpy as np
-def validate(validation_dataloader,model,loss_fn):
-    loss_history = []
-    pred_history = []
-
-    for iEpoch in range(NEPOCHS):
-        valid_loss = 0.0
-        for batch, (X,y) in enumerate(validation_dataloader):
-            X=X.float()
+def validate(valid_dataloader,model):
+    
+    ##https://github.com/christianversloot/machine-learning-articles/blob/main/how-to-predict-new-samples-with-your-pytorch-model.md
+    with torch.no_grad():
+        for batch, (X,y) in enumerate(valid_dataloader):
+            X =X.float()
             pred = model(X)
-            loss = loss_fn(pred,y)
-            #save pred
-            pred_history.append(pred)
+            pred_class =np.argmax(pred)
 
-
+            print(f'prediction: {pred:>4f}, class: {pred_class:>4f}, original: {y:>4f}')
