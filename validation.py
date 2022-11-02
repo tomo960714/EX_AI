@@ -1,12 +1,47 @@
 import torch
 import numpy as np
-def validate(valid_dataloader,model):
-    
-    ##https://github.com/christianversloot/machine-learning-articles/blob/main/how-to-predict-new-samples-with-your-pytorch-model.md
-    with torch.no_grad():
-        for batch, (X,y) in enumerate(valid_dataloader):
-            X =X.float()
-            pred = model(X)
-            pred_class =np.argmax(pred)
+from torch import nn
+from constants import BATCH_SIZE
+def validate(valid_dataloader,model,loss_fn,device):
+    pred_history = []
+    true_history = []
 
-            print(f'prediction: {pred:>4f}, class: {pred_class:>4f}, original: {y:>4f}')
+    eval_losses=[]
+    eval_accu=[]
+
+    model.eval()
+    running_loss=0
+    correct=0
+    total=0
+    n_total=25
+    predicted_bmi = np.zeros(n_total,)
+    #https://github.com/christianversloot/machine-learning-articles/blob/main/how-to-predict-new-samples-with-your-pytorch-model.md
+    with torch.no_grad():
+        batch_cnt = 0
+        for batch, (input,target) in enumerate(valid_dataloader):
+            
+            input = input.float()
+            target=target.float()
+            #print(input.shape)
+            input=input.to(device)
+            target=target.to(device)
+
+            pred = model(input)
+            pred_reshape = torch.movedim(pred,1,0)
+            pred_new =nn.functional.softmax(pred_reshape[0],dim=0)
+            
+            #https://stackoverflow.com/questions/57727372/how-do-i-get-the-value-of-a-tensor-in-pytorch
+            tmp_pred=pred_new.detach().cpu().numpy()
+            tmp_true =target.detach().cpu().numpy()
+            
+            for i in range(len(tmp_pred)):
+                pred_history.append(tmp_pred[i,])
+                true_history.append(tmp_true[i,])
+            batch_cnt += 1
+            
+            
+            
+    #print('pred_history:',pred_history)
+    #print('true_history:',true_history)
+
+    return pred_history,true_history

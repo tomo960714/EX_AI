@@ -1,0 +1,35 @@
+{"obj": {"type": "AssignString", "path": ["sys", "name"], "value": "Untitled"}, "version": 1}
+{"obj": {"type": "AssignString", "path": ["sys", "description"], "value": ""}, "version": 2}
+{"obj": {"type": "AssignString", "path": ["sys", "hostname"], "value": "B01D"}, "version": 3}
+{"obj": {"type": "AssignBool", "path": ["sys", "failed"], "value": false}, "version": 4}
+{"obj": {"type": "ClearStringLog", "path": ["monitoring", "stdout"]}, "version": 5}
+{"obj": {"type": "ClearStringLog", "path": ["monitoring", "stderr"]}, "version": 6}
+{"obj": {"type": "AssignString", "path": ["source_code", "entrypoint"], "value": "main.py"}, "version": 7}
+{"obj": {"type": "UploadFileSet", "path": ["source_code", "files"], "file_globs": ["E:\\98_GitRepo\\01_EX_AI\\EX_AI\\main.py"], "reset": "False"}, "version": 8}
+{"obj": {"type": "ConfigFloatSeries", "path": ["monitoring", "cpu"], "min": 0.0, "max": 100.0, "unit": "%"}, "version": 9}
+{"obj": {"type": "ClearFloatLog", "path": ["monitoring", "cpu"]}, "version": 10}
+{"obj": {"type": "ConfigFloatSeries", "path": ["monitoring", "memory"], "min": 0.0, "max": 15.93630599975586, "unit": "GB"}, "version": 11}
+{"obj": {"type": "ClearFloatLog", "path": ["monitoring", "memory"]}, "version": 12}
+{"obj": {"type": "ConfigFloatSeries", "path": ["monitoring", "gpu"], "min": 0.0, "max": 100.0, "unit": "%"}, "version": 13}
+{"obj": {"type": "ClearFloatLog", "path": ["monitoring", "gpu"]}, "version": 14}
+{"obj": {"type": "ConfigFloatSeries", "path": ["monitoring", "gpu_memory"], "min": 0.0, "max": 8.0, "unit": "GB"}, "version": 15}
+{"obj": {"type": "ClearFloatLog", "path": ["monitoring", "gpu_memory"]}, "version": 16}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "cpu"], "values": [{"value": 13.1, "step": null, "ts": 1667365963.452345}]}, "version": 17}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "memory"], "values": [{"value": 12.05197525024414, "step": null, "ts": 1667365963.452345}]}, "version": 18}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "gpu"], "values": [{"value": 3.0, "step": null, "ts": 1667365963.452345}]}, "version": 19}
+{"obj": {"type": "LogFloats", "path": ["monitoring", "gpu_memory"], "values": [{"value": 2.729351043701172, "step": null, "ts": 1667365963.452345}]}, "version": 20}
+{"obj": {"type": "AssignFloat", "path": ["parameters", "learning_rate"], "value": 0.001}, "version": 21}
+{"obj": {"type": "AssignString", "path": ["parameters", "optimizer"], "value": "SGD"}, "version": 22}
+{"obj": {"type": "AssignInt", "path": ["parameters", "max_epochs"], "value": 2}, "version": 23}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "loss: 685.433960  [    0/   75] Epoch [  1/  2] ", "step": null, "ts": 1667365966.9663446}]}, "version": 24}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "\n", "step": null, "ts": 1667365966.9663446}]}, "version": 25}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "loss: 685.428833  [    0/   75] Epoch [  2/  2] ", "step": null, "ts": 1667365967.4263403}]}, "version": 26}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "\n", "step": null, "ts": 1667365967.4263403}]}, "version": 27}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "out_history:", "step": null, "ts": 1667365967.4873414}]}, "version": 28}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": " ", "step": null, "ts": 1667365967.4873414}]}, "version": 29}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "[[ 0.00000000e+000  6.95257479e-310  5.58294180e-321 -4.06503392e-278\n   6.57436868e+067  7.38231461e+019  2.17648798e-223  5.91012707e-077\n  -5.74811721e+267 -5.83292554e-303  3.32874673e+101  9.23102339e-255\n   5.44290164e-217  2.33448454e-279  6.69739864e+160  1.27802865e-152\n   6.51676556e-173  1.12536461e+097  1.56104792e+098  4.88125621e+252\n   1.83563999e-158  2.74594901e+193  2.99027014e+267  2.18143938e+243\n   1.33277442e-070  3.97938537e-294  2.76084883e+093  1.00395696e-089\n   2.85739834e-163  3.12300703e-033  3.50339880e-196  1.42560964e-071\n  -5.96136337e-303  3.32874673e+101  9.23102339e-255  5.44290164e-217\n   2.33448454e-279  6.69739864e+160  1.27802865e-152  6.51676556e-173\n   1.12536461e+097  1.56104792e+098  4.88125621e+252  1.83563999e-158\n   2.74594901e+193  2.99027014e+267  2.18143938e+243  1.33277442e-070\n   3.97938537e-294  2.76084883e+093  1.00395696e-089 -3.93126872e-298\n  -5.73714408e-279  1.42936525e-284 -3.82270249e-298 -5.39331349e+067\n  -4.25226385e-104  ", "step": null, "ts": 1667365967.4943419}]}, "version": 30}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "\n", "step": null, "ts": 1667365967.4943419}]}, "version": 31}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stderr"], "values": [{"value": "e:\\98_GitRepo\\01_EX_AI\\EX_AI\\validation.py:40: NeptuneDeprecationWarning: The object you're logging will be implicitly cast to a string. We'll end support of this behavior in `neptune-client==1.0.0`. To log the object as a string, use `.log(str(object))` instead.\n  run[\"model/validation/prediction\"].log(pred_new)\n", "step": null, "ts": 1667365967.6303422}]}, "version": 32}
+{"obj": {"type": "LogStrings", "path": ["model", "validation", "prediction"], "values": [{"value": "tensor([0.0181, 0.0022, 0.0500, 0.0141, 0.0087, 0.0324, 0.0431, 0.0221, 0.3466,\n        0.0207, 0.0111, 0.0161, 0.0177, 0.0385, 0.0424, 0.0498, 0.0278, 0.0108,\n        0.0213, 0.0308, 0.0286, 0.0178, 0.0206, 0.0830, 0.0257],\n       device='cuda:0')", "step": null, "ts": 1667365967.633341}]}, "version": 33}
+{"obj": {"type": "LogStrings", "path": ["model", "validation", "prediction"], "values": [{"value": "tensor([27.3833, 16.0584, 23.7259, 25.9464, 24.8906, 35.2143, 34.3353, 24.9078,\n        21.9169, 26.2967, 22.1306, 16.0584, 32.1169, 30.1096, 29.2157, 24.4951,\n        26.2967, 24.1243, 21.5134, 22.2400, 32.5510, 24.9078, 24.3913, 20.8172,\n        36.5834], device='cuda:0')", "step": null, "ts": 1667365967.6363432}]}, "version": 34}
+{"obj": {"type": "LogStrings", "path": ["monitoring", "stdout"], "values": [{"value": "Shutting down background jobs, please wait a moment...\n", "step": null, "ts": 1667365967.637342}]}, "version": 35}

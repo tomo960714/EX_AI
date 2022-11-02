@@ -48,6 +48,14 @@ def calc_BMI(df):
         #No limit, Nothing happens
     
     tmp_df.reset_index(drop=True, inplace=True)
-    print(tmp_df)
+    #print(tmp_df)
 
     return tmp_df
+
+def tensor2list(tensor):
+    temp = tensor.detach().cpu().numpy()
+    arr=np.zeros([len(tensor)])
+    for i in range(len(tensor)):
+        arr[i]=temp[i,]
+    
+    return arr
