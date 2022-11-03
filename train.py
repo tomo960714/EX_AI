@@ -36,7 +36,9 @@ def train(train_dataloader,model,optimizer,loss_fn,device,size):
             
             #perform forward pass
             output=model(input)
+
             output_1=torch.movedim(output,1,0)
+            print(output_1.shape)
             output_new=nn.functional.softmax(output_1[0],dim=0)
         
             

@@ -62,14 +62,17 @@ valid_pred_history,valid_true_history = validate(valid_dataloader=test_dataloade
 
 print("train_loss_history:",train_loss_history)
 x=range(0,TRAIN_SIZE)
-plt.scatter(x,train_output_history,color='blue',label='prediction')
-plt.scatter(x,train_true_history,color='red',label='true')
-plt.savefig('train.png')
-
+#plt.scatter(x,train_output_history,color='blue',label='prediction')
+#plt.scatter(x,train_true_history,color='red',label='true')
+#plt.savefig('train.png')
+#plt.show()
+#plt.close()
 x=range(0,TEST_SIZE)
 #plot vlaidation data:
 plt.scatter(x,valid_pred_history,color='blue',label='prediction')
 plt.scatter(x,valid_true_history,color='red',label='true')
+plt.legend()
 plt.show()
 plt.savefig('validation.png')
+plt.close()
 # %%
