@@ -52,7 +52,25 @@ def calc_BMI(df):
     #print(tmp_df)
 
     return tmp_df
-
+def reset_sex(df):
+    from constants import DATASET_LIMIT
+    tmp_df = df.drop(df[df['sex'].isna()].index)
+    if isinstance(DATASET_LIMIT,int):
+        #print('a')
+        tmp_df = tmp_df[:DATASET_LIMIT]
+    elif not isinstance(DATASET_LIMIT,str):
+        x = input('Wrong Dataset limit, give a new integer or ALL!\n')
+        if not isinstance(x,str):
+            DATASET_LIMIT = int(x)
+            tmp_df = tmp_df[:DATASET_LIMIT]
+        else:
+            DATASET_LIMIT = 'ALL'
+            #No limit
+    #else:
+        #No limit, Nothing happens
+    
+    tmp_df.reset_index(drop=True, inplace=True)
+    return tmp_df
 def tensor2list(tensor):
     temp = tensor.detach().cpu().numpy()
     arr=np.zeros([len(tensor)])

@@ -38,7 +38,7 @@ def train(train_dataloader,model,optimizer,loss_fn,device,size):
             
             #perform forward pass
             output=model(input)
-            print(output.shape)
+            #print(output.shape)
             #output_new=nn.functional.softmax(output_1[0],dim=0)
         
             
@@ -62,7 +62,7 @@ def train(train_dataloader,model,optimizer,loss_fn,device,size):
                 print('meep')
                 output_history.append(output.detach().cpu().numpy())
                 true_history.append(target.detach().cpu().numpy())
-                print(f'at {iEpoch}, output is: {output_history}, true vaalue is {true_history}')
+                #print(f'at {iEpoch}, output is: {output_history}, true vaalue is {true_history}')
             loss_tmp += loss.item()
             batch_cnt += 1
             #print(loss.item())

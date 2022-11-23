@@ -5,16 +5,7 @@ from constants import BATCH_SIZE
 def validate(valid_dataloader,model,loss_fn,device):
     pred_history = []
     true_history = []
-
-    eval_losses=[]
-    eval_accu=[]
-
     model.eval()
-    running_loss=0
-    correct=0
-    total=0
-    n_total=25
-    predicted_bmi = np.zeros(n_total,)
     #https://github.com/christianversloot/machine-learning-articles/blob/main/how-to-predict-new-samples-with-your-pytorch-model.md
     with torch.no_grad():
         batch_cnt = 0

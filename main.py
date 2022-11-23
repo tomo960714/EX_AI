@@ -68,8 +68,8 @@ plt.scatter(x,train_loss_history,label='loss')
 plt.savefig('loss.png')
 plt.show()
 plt.close()
-print(len(train_output_history))
-print(len(train_true_history))
+#print(len(train_output_history))
+#print(len(train_true_history))
 """
 print("last train values")
 #x=range(0,len(train_output_history))
@@ -80,7 +80,7 @@ plt.savefig('train.png')
 plt.close()
 """
 
-x=range(0,TEST_SIZE)
+#x=range(0,TEST_SIZE)
 #plot vlaidation data:
 plt.scatter(valid_true_history,valid_pred_history,color='blue',label='x:true, y: prediction')
 #plt.scatter(x,valid_true_history,color='red',label='true')
