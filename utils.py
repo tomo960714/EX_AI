@@ -83,3 +83,7 @@ def tensor2file(tensor):
     print('tensor to np shape:',t_np.shape)
     #df = pd.DataFrame(t_np) #convert to DataFrame
     #df.to_csv("testfile",index=False,header=False) #save to file
+
+def accuracy_fn(predicted,target):
+    correct = torch.sum(predicted == target)
+    return correct/len(predicted)
