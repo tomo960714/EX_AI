@@ -46,7 +46,7 @@ def train_loop(train_dataloader,model,optimizer,loss_fn,device,size):
         loss_tmp += loss.detach().cpu().numpy()
         nr_entries += len(input)
         #print(loss_tmp)
-    print(f"train loss:{loss_tmp}, entries: {nr_entries}, avg: {loss_tmp/nr_entries}")
+    print(f"train loss:{loss_tmp}}")
 
     #TOO: To save loss, should I onyl use loss that is up there or all of the loss values?
     #prnt("loss history:",loss_history)    

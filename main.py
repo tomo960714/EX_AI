@@ -48,7 +48,7 @@ test_dataloader = DataLoader(test_dataset,batch_size=BATCH_SIZE)
 #print(f'test_dataset {test_dataset}')
 model = My_Network(lstm_input_dim = 10,hidden_dim = 10,num_layers = 2)
 model=model.to(device)
-loss_fn = nn.MSELoss()
+loss_fn = nn.MSELoss(reduction='mean')
 #print('a')
 learning_rate = 0.001
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
