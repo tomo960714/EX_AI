@@ -2,7 +2,7 @@
 #%%
 import pandas as pd
 import os
-
+from scipy.fft import fft
 from utils import load_single_raw_data, calc_BMI,reset_sex
 from constants import REC_PATH, SAMPLING_RATE,DATASET_LIMIT
 from torchvision import transforms
@@ -10,7 +10,7 @@ from torchvision import transforms
 
 #%%
 class PTB_Dataset():
-    def __init__(self,csv_file,rec_dir,transform):
+    def __init__(self,csv_file,rec_dir,transform,FFT_enabled = False):
         """
         Custom dataset for PTB-XL dataset
         Args:
@@ -34,6 +34,7 @@ class PTB_Dataset():
             
         self.rec_dir = rec_dir
         self.transform = transform
+        self.FFT_enabled =FFT_enabled
     
     def __len__(self):
         from constants import DATASET_TYPE
@@ -41,7 +42,7 @@ class PTB_Dataset():
             return len(self.data['BMI'])
         elif DATASET_TYPE == 'SEX':
             return len(self.data['sex'])
-    
+
     def __getitem__(self,idx):
         from constants import DATASET_TYPE
         if DATASET_TYPE == 'BMI':
@@ -54,7 +55,12 @@ class PTB_Dataset():
         """
         rec = load_single_raw_data(self.data['filename_lr'].iloc[idx],SAMPLING_RATE,REC_PATH)
         #print(rec.shape)
-        
+        if self.FFT_enabled == True:
+            print(rec.shape)
+            rec = fft(rec[1])
+            print(rec.shape)
+            
+            
         #if idx == 1: print('rec:',rec)
         
         rec_as_tensor = self.transform(rec.astype(float))
@@ -68,6 +74,14 @@ class PTB_Dataset():
         return rec_as_tensor, label
     
 
+#%%
+if __name__ == '__main__':
+    from constants import CSV_PATH,REC_PATH
+    CustomDataset = PTB_Dataset(CSV_PATH,REC_PATH,transforms.ToTensor(),FFT_enabled = False)
+    CustomDataset.__getitem__(1)
+    
+    
+    
 
 
 

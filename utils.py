@@ -1,9 +1,10 @@
+#%%
 import numpy as np
 import wfdb
 import ast
 import torch
 import pandas as pd
-
+from scipy.fft import fft
 
 def load_single_raw_data(filename, sampling_rate, path):
     data = wfdb.rdsamp(path+filename) 
@@ -72,11 +73,7 @@ def reset_sex(df):
     tmp_df.reset_index(drop=True, inplace=True)
     return tmp_df
 def tensor2list(tensor):
-    temp = tensor.detach().cpu().numpy()
-    arr=np.zeros([len(tensor)])
-    for i in range(len(tensor)):
-        arr[i]=temp[i,]
-    
+    arr = tensor.detach().cpu().numpy().tolist()
     return arr
 def tensor2file(tensor):
     t_np=tensor.numpy() #convert to np
@@ -87,3 +84,8 @@ def tensor2file(tensor):
 def accuracy_fn(predicted,target):
     correct = torch.sum(predicted == target)
     return correct/len(predicted)
+
+def custom_FFT(data):
+    data_fft = fft(data)
+    return data_fft
+# %%

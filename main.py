@@ -12,7 +12,11 @@ from torch import nn
 import timm
 import matplotlib.pyplot as plt
 import neptune.new as neptune
-
+from skopt import BayesSearchCV
+from sklearn.svm import SVC
+from skopt.space import Real, Categorical, Integer
+import gc
+gc.collect()
 #internal imports
 from dataset import PTB_Dataset
 from train import train_loop
@@ -23,50 +27,89 @@ from utils import accuracy_fn
 
 #constants
 from constants import REC_PATH,CSV_PATH,DATASET_LIMIT,BATCH_SIZE,N_LEADS,N_CLASSES,NEPOCHS
+
+torch.cuda.empty_cache()
 #%%
 
 #
-CustomDataset = PTB_Dataset(CSV_PATH,REC_PATH,transforms.ToTensor())
-#print(CustomDataset.__len__())
-################################################################
-#Init neptune
-################################################################
-"""run = neptune.init(
-    project="NTLAB/test",
-    api_token="eyJhcGlfYWRkcmVzcyI6Imh0dHBzOi8vYXBwLm5lcHR1bmUuYWkiLCJhcGlfdXJsIjoiaHR0cHM6Ly9hcHAubmVwdHVuZS5haSIsImFwaV9rZXkiOiJhNGRjNDgzOC04OTk5LTQ0YTktYjQ4Ny1hMTE4NzRjNjBiM2EifQ==",
-)  # your credentials"""
+def main(exp_directory,weights_name,epochs=50,batch_size=64,lr = 1e-4,momentum=0.9):
+    CustomDataset = PTB_Dataset(CSV_PATH,REC_PATH,transforms.ToTensor())
 
-#Train %
-TRAIN_SIZE= math.floor(CustomDataset.__len__()*0.75)
-TEST_SIZE=CustomDataset.__len__()-TRAIN_SIZE
-train_dataset,test_dataset = torch.utils.data.random_split(CustomDataset,[TRAIN_SIZE, TEST_SIZE])
+    #Train %
+    TRAIN_SIZE = math.floor(CustomDataset.__len__()*0.75)
+    print(CustomDataset.__len__(),TRAIN_SIZE)
+    TEST_SIZE = CustomDataset.__len__()-TRAIN_SIZE
+    train_dataset,test_dataset = torch.utils.data.random_split(CustomDataset,[TRAIN_SIZE, TEST_SIZE])
+    VALID_SIZE = math.floor(TRAIN_SIZE*0.4)
+    TRAIN_SIZE = TRAIN_SIZE - VALID_SIZE
+    train_dataset,valid_dataset = torch.utils.data.random_split(train_dataset,[VALID_SIZE, TRAIN_SIZE])
 
-device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-train_dataloader = DataLoader(train_dataset,batch_size=BATCH_SIZE)
-test_dataloader = DataLoader(test_dataset,batch_size=BATCH_SIZE)
+    device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+    train_dataloader = DataLoader(train_dataset,batch_size=BATCH_SIZE)
+    valid_dataloader = DataLoader(valid_dataset,batch_size=BATCH_SIZE)
+    test_dataloader = DataLoader(test_dataset,batch_size=BATCH_SIZE)
+    dataloaders = {
+        'Train':
+            train_dataloader,
+        'Valid':
+            valid_dataloader,
+        'Test':
+            test_dataloader
+    }
+    set_sizes = {
+        'Train':TRAIN_SIZE,
+        'Valid':VALID_SIZE,
+        'Test':TEST_SIZE
+    }
+
+    #%%
+    #print(f'test_dataset {test_dataset}')
+    model = My_Network(lstm_input_dim = 10,hidden_dim = 10,num_layers = 2)
+    model=model.to(device)
+    loss_fn = nn.MSELoss(reduction='mean')
+    #print('a')
+
+    optimizer = torch.optim.SGD(model.parameters(), lr=lr,momentum=momentum,weight_decay=lr/epochs)
+    print(model)
+
+    #%%
+    _ = train_loop(dataloaders=dataloaders,model=model,loss_fn=loss_fn,optimizer=optimizer,device=device,weights_name = weights_nameevaluate=True)
+
 #%%
-#print(f'test_dataset {test_dataset}')
-model = My_Network(lstm_input_dim = 10,hidden_dim = 10,num_layers = 2)
-model=model.to(device)
-loss_fn = nn.MSELoss(reduction='mean')
-#print('a')
-learning_rate = 0.001
-optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
-
-#%%
-train_loss=np.empty(NEPOCHS)
-valid_loss=np.empty(NEPOCHS)
-for iEpoch in range(NEPOCHS):
-    print(f"Current epoch is [{iEpoch}/{NEPOCHS}]")
-    train_preds,train_target,train_loss[iEpoch] = train_loop(train_dataloader=train_dataloader,model=model,loss_fn=loss_fn,optimizer=optimizer,device=device,size=TRAIN_SIZE,)
-    valid_preds,valid_target,valid_loss[iEpoch] = validation_loop(valid_dataloader=test_dataloader,model=model,loss_fn=loss_fn,device=device)
-    #print(train_loss)
-    #train_acc = accuracy_fn(train_preds,train_target)
-    #valid_acc = accuracy_fn(valid_preds,valid_target)
-    #print(f"train accuracy: {train_acc}, valid accuracy: {valid_acc} at {iEpoch}/{NEPOCHS}")
+#learning rate, momentum = 0.9, decay = learning rate / epochs
+def hpt(lr_list,momentum_list):
     
+
 #%%
 
+epochs = 50
+learning_rate = (0.001,0.01)
+lr_list =[1e-2,1e-3,1e-4]
+momentum_list = [0.9,0.8,0.7]
+
+
+CustomDataset = PTB_Dataset(CSV_PATH,REC_PATH,transforms.ToTensor())
+TRAIN_SIZE = math.floor(CustomDataset.__len__()*0.75)
+VALID_SIZE = CustomDataset.__len__()-TRAIN_SIZE
+train_dataset,valid_dataset = torch.utils.data.random_split(CustomDataset,[VALID_SIZE, TRAIN_SIZE])
+
+valami=hpt(lr_list=learning_rate,momentum_list=momentum_list)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#%%
+"""
 print("show losses per epochs")
 x=range(0,NEPOCHS)
 plt.plot(x,train_loss,label='train loss')
@@ -78,7 +121,7 @@ plt.xlabel('Epochs')
 plt.title('Train and validation losses vs epochs')
 plt.savefig('loss.png')
 plt.show()
-plt.close()
+plt.close()"""
 #%%
 
 
