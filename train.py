@@ -7,7 +7,7 @@ from torch import nn
 from torch.utils.data import DataLoader
 import math
 import torchvision
-import neptune.new as neptune
+#import neptune.new as neptune
 import time
 import copy
 from GPUtil import showUtilization as gpu_usage
@@ -18,10 +18,10 @@ import tqdm
 from dataset import PTB_Dataset
 
 #constants
-from constants import REC_PATH,CSV_PATH,DATASET_LIMIT,BATCH_SIZE,N_LEADS,N_CLASSES,NEPOCHS
+from constants import REC_PATH,CSV_PATH,N_LEADS,N_CLASSES
 from utils import tensor2list as t2l
 
-def train_loop(dataloaders,model,optimizer,loss_fn,device,weights_name,evaluate = True):
+def train_loop(dataloaders,model,optimizer,loss_fn,device,weights_name,epochs,evaluate = True):
 
     if evaluate == True:
         phases =['Train', 'Valid']
@@ -39,10 +39,10 @@ def train_loop(dataloaders,model,optimizer,loss_fn,device,weights_name,evaluate 
         value_writer = csv.DictWriter(csvfile, fieldnames=fieldnames_values)
         value_writer.writeheader()
 
-    for epoch in range(1,NEPOCHS+1):
+    for epoch in range(1,epochs+1):
         gpu_usage()
         #gpu_usage()
-        print('Epoch {}/{}'.format(epoch, NEPOCHS))
+        print('Epoch {}/{}'.format(epoch, epochs))
         print('-' * 10)
         # Each epoch has a training and Validation phase
         # Initialize batch summary
