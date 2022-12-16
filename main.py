@@ -11,12 +11,13 @@ import math
 from torch import nn
 import timm
 import matplotlib.pyplot as plt
-import neptune.new as neptune
+#import neptune.new as neptune
 from skopt import BayesSearchCV
 from sklearn.svm import SVC
 from skopt.space import Real, Categorical, Integer
 import gc
 gc.collect()
+import os
 #internal imports
 from dataset import PTB_Dataset
 from train import train_loop
@@ -31,8 +32,8 @@ from constants import REC_PATH,CSV_PATH,DATASET_LIMIT,BATCH_SIZE,N_LEADS,N_CLASS
 torch.cuda.empty_cache()
 #%%
 
-#
-def main(exp_directory,weights_name,epochs=50,batch_size=64,lr = 1e-4,momentum=0.9):
+#main function
+def main(weights_name,epochs=50,batch_size=64,lr = 1e-4,momentum=0.9):
     CustomDataset = PTB_Dataset(CSV_PATH,REC_PATH,transforms.ToTensor())
 
     #Train %
@@ -62,7 +63,7 @@ def main(exp_directory,weights_name,epochs=50,batch_size=64,lr = 1e-4,momentum=0
         'Test':TEST_SIZE
     }
 
-    #%%
+
     #print(f'test_dataset {test_dataset}')
     model = My_Network(lstm_input_dim = 10,hidden_dim = 10,num_layers = 2)
     model=model.to(device)
@@ -72,29 +73,54 @@ def main(exp_directory,weights_name,epochs=50,batch_size=64,lr = 1e-4,momentum=0
     optimizer = torch.optim.SGD(model.parameters(), lr=lr,momentum=momentum,weight_decay=lr/epochs)
     print(model)
 
-    #%%
-    _ = train_loop(dataloaders=dataloaders,model=model,loss_fn=loss_fn,optimizer=optimizer,device=device,weights_name = weights_nameevaluate=True)
+    _ = train_loop(dataloaders=dataloaders,model=model,loss_fn=loss_fn,optimizer=optimizer,device=device,epochs=epochs,weights_name = weights_name,evaluate=True)
 
 #%%
 #learning rate, momentum = 0.9, decay = learning rate / epochs
-def hpt(lr_list,momentum_list):
-    
+def hpt(lr_list,momentum_list,epochs):
+    for lr in lr_list:
+        for momentum in momentum_list:
+            name = 'lr' + str(lr) +"_" + 'mom' + str(momentum)
+            name_pt = name+".pt"
+            print(name)
+            main(weights_name=name_pt,epochs=epochs,batch_size=64,lr=lr,momentum=momentum)
+            model = None
+            torch.cuda.empty_cache()
+            gc.collect()
+    print('hpt done')
 
 #%%
 
-epochs = 50
-learning_rate = (0.001,0.01)
+epochs = 2
 lr_list =[1e-2,1e-3,1e-4]
 momentum_list = [0.9,0.8,0.7]
 
 
-CustomDataset = PTB_Dataset(CSV_PATH,REC_PATH,transforms.ToTensor())
-TRAIN_SIZE = math.floor(CustomDataset.__len__()*0.75)
-VALID_SIZE = CustomDataset.__len__()-TRAIN_SIZE
-train_dataset,valid_dataset = torch.utils.data.random_split(CustomDataset,[VALID_SIZE, TRAIN_SIZE])
+#valami=hpt(lr_list=lr_list,momentum_list=momentum_list,epochs=epochs)
+#print(valami)
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+model = torch.load('./results/best_model.pt')
+model.to(device)
 
-valami=hpt(lr_list=learning_rate,momentum_list=momentum_list)
+def plot_results(model,dataloader,device,dir):
+    pred_history=[]
+    true_history=[]
+    for batch, (input,target) in enumerate(DataLoader):
+        outputs = model(input)
+        pred_history = pred_history + outputs.detach().cpu().numpy().tolist()
+        true_history = true_history + target.detach().cpu().numpy().tolist()
+    
+    #visualize things
+    print('Used model:')
+    print(model)
 
+    #visualize train and valdiaiton loss:
+    path='results/a'
+    try:
+        os.mkdir(path)
+    except OSError as error:
+        print(error)
+    
 
 
 

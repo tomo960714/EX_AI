@@ -10,3 +10,8 @@ ipython_config.py
 #Data
 data/
 data.zip
+results/
+runs/
+OLD/
+asd/
+.neptune/
