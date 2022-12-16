@@ -96,8 +96,13 @@ lr_list =[1e-2,1e-3,1e-4]
 momentum_list = [0.9,0.8,0.7]
 
 
+<<<<<<< HEAD
 #valami=hpt(lr_list=lr_list,momentum_list=momentum_list,epochs=epochs)
 #print(valami)
+=======
+valami=hpt(lr_list=lr_list,momentum_list=momentum_list,epochs=epochs)
+print(valami)
+>>>>>>> 859bb1da9020ce72d3e50248cefc3e7f8c7034d8
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 model = torch.load('./results/best_model.pt')
 model.to(device)

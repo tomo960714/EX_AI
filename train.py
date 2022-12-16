@@ -23,8 +23,13 @@ from dataset import PTB_Dataset
 from constants import REC_PATH,CSV_PATH,N_LEADS,N_CLASSES
 from utils import tensor2list as t2l
 
+<<<<<<< HEAD
 def train_loop(dataloaders,model,optimizer,loss_fn,device,weights_name,epochs,set_sizes,evaluate = True):
     
+=======
+def train_loop(dataloaders,model,optimizer,loss_fn,device,weights_name,epochs,evaluate = True):
+
+>>>>>>> 859bb1da9020ce72d3e50248cefc3e7f8c7034d8
     if evaluate == True:
         phases =['Train', 'Valid']
     else:
@@ -39,8 +44,12 @@ def train_loop(dataloaders,model,optimizer,loss_fn,device,weights_name,epochs,se
     save_path=os.path.join('results/',weights_name)
 
     for epoch in range(1,epochs+1):
+<<<<<<< HEAD
         epoch_loss = 0.0
         best_model_changed = False
+=======
+        gpu_usage()
+>>>>>>> 859bb1da9020ce72d3e50248cefc3e7f8c7034d8
         #gpu_usage()
         print('Epoch {}/{}'.format(epoch, epochs))
         print('-' * 10)
