@@ -23,13 +23,8 @@ from dataset import PTB_Dataset
 from constants import REC_PATH,CSV_PATH,N_LEADS,N_CLASSES
 from utils import tensor2list as t2l
 
-<<<<<<< HEAD
 def train_loop(dataloaders,model,optimizer,loss_fn,device,weights_name,epochs,set_sizes,evaluate = True):
     
-=======
-def train_loop(dataloaders,model,optimizer,loss_fn,device,weights_name,epochs,evaluate = True):
-
->>>>>>> 859bb1da9020ce72d3e50248cefc3e7f8c7034d8
     if evaluate == True:
         phases =['Train', 'Valid']
     else:
@@ -44,12 +39,8 @@ def train_loop(dataloaders,model,optimizer,loss_fn,device,weights_name,epochs,ev
     save_path=os.path.join('results/',weights_name)
 
     for epoch in range(1,epochs+1):
-<<<<<<< HEAD
         epoch_loss = 0.0
         best_model_changed = False
-=======
-        gpu_usage()
->>>>>>> 859bb1da9020ce72d3e50248cefc3e7f8c7034d8
         #gpu_usage()
         print('Epoch {}/{}'.format(epoch, epochs))
         print('-' * 10)
@@ -61,10 +52,10 @@ def train_loop(dataloaders,model,optimizer,loss_fn,device,weights_name,epochs,ev
         train_predictions = []
         valid_targets = []
         valid_predictions = []
-
+        running_loss_train = 00.0
+        running_loss_valid = 00.0
        
         for phase in phases:
-            running_loss = 0.0
             if phase == 'Train':
                 model.train()  # Set model to training mode
             else:
@@ -78,8 +69,14 @@ def train_loop(dataloaders,model,optimizer,loss_fn,device,weights_name,epochs,ev
                 with torch.set_grad_enabled(phase == 'Train'):
                     outputs = model(inputs)
                     loss = loss_fn(outputs, target)
-                    running_loss += loss.item() * inputs.size(0)
+                    
+                    if phase == 'Train':
+                        running_loss_train += loss.item()*inputs.size(0)
+                    else:
+                        running_loss_valid += loss.item()*inputs.size(0)
+    
 
+                    
                     try:
                         if phase == 'Train':
 
@@ -112,15 +109,15 @@ def train_loop(dataloaders,model,optimizer,loss_fn,device,weights_name,epochs,ev
             target = None
 
             print(f'{phase} phase, loss: {loss.item()}')
-            try:
-                if phase == 'Train':
-                    metrics_summary['Train_loss']=running_loss.detach().cpu().numpy()
-                else:    
-                    metrics_summary['Valid_loss']=running_loss.detach().cpu().numpy()
-            except:
-                    metrics_summary[f'{phase}_loss']=0 
+            
+            if phase == 'Train':
+                metrics_summary['Train_loss']=running_loss_train/ set_sizes[phase]
+                print('train loss:',metrics_summary['Train_loss'])
+            else:    
+                metrics_summary['Valid_loss']=running_loss_valid/ set_sizes[phase]
+           
 
-        epoch_loss = running_loss / set_sizes[phase]
+        #epoch_loss['train'] = runn / set_sizes[phase]
        
         df_values = df_values.append({'epoch':epoch,'Train_target':train_targets,'Train_pred':train_predictions,'Valid_target':valid_targets,'Valid_pred':valid_predictions},ignore_index=True)
         df_metrics = df_metrics.append({'epoch':epoch,'Train_loss':metrics_summary['Train_loss'],'Valid_loss':metrics_summary['Valid_loss']},ignore_index=True)
@@ -138,8 +135,8 @@ def train_loop(dataloaders,model,optimizer,loss_fn,device,weights_name,epochs,ev
     time_elapsed = time.time() - since
     if best_model_changed:
         #copy csv files to best model folder
-        shutil.copy(save_path+'metrics.csv', save_path+'best_model/metrics.csv')
-        shutil.copy(save_path+'values.csv', save_path+'best_model/values.csv')
+        shutil.copy('results/'+weights_name+'metrics.csv', 'results/'+'best_model/'+weights_name+'metrics.csv')
+        shutil.copy('results/'+weights_name+'values.csv', 'results/'+'best_model/'+weights_name+'values.csv')
 
 
     print('Training complete in {:.0f}m {:.0f}s'.format(time_elapsed // 60, time_elapsed % 60))

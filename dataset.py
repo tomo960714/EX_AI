@@ -73,7 +73,57 @@ class PTB_Dataset():
 
         return rec_as_tensor, label
     
+class PTB_Dataset_Sex():
+    def __init__(self,csv_file,rec_dir,transform,FFT_enabled = False):
+        """
+        Custom dataset for PTB-XL dataset
+        Args:
+            csv_file (string): path to ptbxl_database.csv
+            rec_dir (string): path to the ECG recordings:
+        Transformations:
+            ToTensor():
+        """
+        from constants import DATASET_LIMIT_SEX
+        #print('a')
+        #print(isinstance(csv_file,str))
+        self.data = pd.read_csv(csv_file,header=0,usecols=['ecg_id','sex','filename_lr'])  #names=['ecg_id','weight',]
+        self.data = reset_sex(self.data)
+        #print(self.data)
+            
+        self.rec_dir = rec_dir
+        self.transform = transform
+        self.FFT_enabled =FFT_enabled
+    
+    def __len__(self):
+        return len(self.data['sex'])
 
+    def __getitem__(self,idx):
+        from constants import DATASET_TYPE
+       
+        label = self.data['sex'].iloc[idx]
+        #print(label)
+        """print(self.rec_dir)
+        print(self.data['filename_lr'].iloc[idx])
+        """
+        rec = load_single_raw_data(self.data['filename_lr'].iloc[idx],SAMPLING_RATE,REC_PATH)
+        #print(rec.shape)
+        if self.FFT_enabled == True:
+            print(rec.shape)
+            rec = fft(rec[1])
+            print(rec.shape)
+            
+            
+        #if idx == 1: print('rec:',rec)
+        
+        rec_as_tensor = self.transform(rec.astype(float))
+        #print(f'label type: {label.dtype}')
+        #label = label.float()
+        #print("get",rec_as_tensor.shape)
+        ################################
+        # might be some transformations here...
+        ################################
+
+        return rec_as_tensor, label
 #%%
 if __name__ == '__main__':
     from constants import CSV_PATH,REC_PATH
